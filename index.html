@@ -8,15 +8,13 @@
 <meta name="description" content="Três casas em Belo Horizonte para casamentos, mini weddings, 15 anos e eventos corporativos.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&family=Newsreader:ital,opsz,wght@1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 
 <a class="skip" href="#casas">Pular para o conteúdo</a>
 
-<!-- The bar starts transparent, sitting inside the footage as part of the
-     image. It only grows a background once the hero is behind us. -->
 <header class="topbar" data-topbar>
   <a class="topbar-brand" href="#topo">Grupo O Conde</a>
   <nav class="topbar-nav">
@@ -30,45 +28,42 @@
 <div class="page" id="topo">
 
   <!-- The stage is deliberately taller than the screen. That extra height IS
-       the timeline: the video sits sticky inside it while the page scrolls
-       past, and every pixel of scroll advances the clip. -->
+       the timeline: the viewport sits sticky inside it while the page scrolls
+       past, and every pixel of scroll advances the clip.
+
+       The film now keeps the whole frame to itself. The words live in a solid
+       band underneath it, so nothing is ever printed over the image. That is
+       also why the old centre scrim is gone: there is no type to protect. -->
   <section class="stage" data-scrub-stage>
 
     <div class="viewport">
 
-      <video
-        data-scrub-video
-        src="video/scrub.mp4?v=34m"
-        poster="video/poster.jpg"
-        muted
-        playsinline
-        preload="auto"
-        disablepictureinpicture
-      ></video>
-
-      <div class="hint" data-beat-start="0" data-beat-end="0.05">Role</div>
-
-      <!-- Each beat owns a slice of the scroll, expressed as 0 to 1 of the
-           whole stage. The gaps between ranges are breaths where only the
-           image carries the moment. -->
-
-      <div class="beat" data-beat-start="0.00" data-beat-end="0.16">
-        <h1>Existe um dia que você já <br><em>imaginou mil vezes</em></h1>
+      <div class="filme">
+        <video
+          data-scrub-video
+          src="video/scrub.mp4?v=34m"
+          poster="video/poster.jpg"
+          muted
+          playsinline
+          preload="auto"
+          disablepictureinpicture
+        ></video>
+        <span class="hint" data-beat-start="0" data-beat-end="0.05">Role</span>
       </div>
 
-      <div class="beat" data-beat-start="0.22" data-beat-end="0.40">
-        <h2>E existe o lugar onde ele <br><em>finalmente acontece</em></h2>
-      </div>
-
-      <div class="beat" data-beat-start="0.46" data-beat-end="0.63">
-        <h2>O bolo, as flores, a luz</h2>
-        <p>Tudo no lugar muito antes de você chegar.</p>
-      </div>
-
-      <div class="beat" data-beat-start="0.70" data-beat-end="1.00">
-        <h2>Mais de <em>4.000 noivas</em> <br>já disseram sim aqui</h2>
-        <p>Belo Horizonte, há mais de uma década.</p>
-        <a class="cta" href="#visita">Agendar uma visita</a>
+      <div class="legenda">
+        <div class="beat" data-beat-start="0.00" data-beat-end="0.18">
+          <p>Existe um dia que você já <em>imaginou mil vezes</em></p>
+        </div>
+        <div class="beat" data-beat-start="0.24" data-beat-end="0.42">
+          <p>E existe o lugar onde ele <em>finalmente acontece</em></p>
+        </div>
+        <div class="beat" data-beat-start="0.48" data-beat-end="0.66">
+          <p>O bolo, as flores, a luz. <em>Tudo pronto antes de você chegar</em></p>
+        </div>
+        <div class="beat" data-beat-start="0.72" data-beat-end="1.00">
+          <p>Mais de quatro mil noivas <em>já disseram sim aqui</em></p>
+        </div>
       </div>
 
     </div>
@@ -76,7 +71,6 @@
 
   <div class="rail" data-scrub-rail></div>
 
-  <!-- Normal page resumes here, on paper. The scrub was the opening act. -->
   <main class="after">
 
     <section class="abertura" id="historia">
@@ -98,70 +92,78 @@
       <div class="numero reveal reveal-4"><strong data-conta="3">3</strong><span>casas de eventos</span></div>
     </section>
 
+    <!-- The three houses are not cards. Each one takes the whole screen and
+         holds it while the next slides up over it, so you pass through the
+         rooms instead of reading about them. -->
     <section class="casas" id="casas">
-      <header class="secao-cabeca reveal">
+
+      <div class="casas-intro">
         <p class="kicker">As casas</p>
         <h2 class="titulo">Três espaços, <em>uma mesma cozinha</em></h2>
-      </header>
+      </div>
 
-      <article class="casa">
-        <figure class="casa-foto">
-          <img src="img/casa-1-conde.jpg" alt="Salão do O Conde Restaurante montado para recepção" loading="lazy" width="1600" height="1200">
-        </figure>
-        <div class="casa-texto reveal reveal-2">
-          <p class="casa-tag">Cidade Jardim</p>
-          <h3>O Conde Restaurante</h3>
-          <p>
-            Gastronomia internacional no coração da Cidade Jardim. A casa onde o
-            grupo começou e onde a assinatura da cozinha foi escrita.
-          </p>
-          <a class="link" href="#visita">Conhecer esta casa</a>
-        </div>
-      </article>
+      <div class="salas">
 
-      <article class="casa is-flipped">
-        <figure class="casa-foto">
-          <img src="img/casa-2-palazzo.jpg" alt="Salão do Palazzo Ristorante com lustres e mesas montadas" loading="lazy" width="1600" height="1200">
-        </figure>
-        <div class="casa-texto reveal reveal-2">
-          <p class="casa-tag">De 100 a 300 convidados</p>
-          <h3>Palazzo Ristorante</h3>
-          <p>
-            Elegância italiana com sofisticação contemporânea. O maior dos três,
-            para a festa em que a família inteira cabe.
-          </p>
-          <a class="link" href="#visita">Conhecer esta casa</a>
-        </div>
-      </article>
+        <article class="sala">
+            <div class="sala-quadro">
+            <img src="img/casa-1-conde.jpg" alt="Salão do O Conde Restaurante montado para recepção" loading="lazy">
+          <span class="sala-n">01</span>
+          <div class="sala-texto">
+            <p class="sala-tag">Cidade Jardim</p>
+            <h3>O Conde <br>Restaurante</h3>
+            <p class="sala-copy">
+              Gastronomia internacional no coração da Cidade Jardim. A casa onde
+              o grupo começou e onde a assinatura da cozinha foi escrita.
+            </p>
+          </div>
+          </div>
+        </article>
 
-      <article class="casa">
-        <figure class="casa-foto">
-          <img src="img/casa-3-garden.jpg" alt="Jardim do The Garden Palace montado para cerimônia ao ar livre" loading="lazy" width="1600" height="1200">
-        </figure>
-        <div class="casa-texto reveal reveal-2">
-          <p class="casa-tag">Cerimônia ao ar livre</p>
-          <h3>The Garden Palace</h3>
-          <p>
-            Charme ao ar livre em um jardim exclusivo. Para quem sempre imaginou
-            o sim debaixo de uma árvore.
-          </p>
-          <a class="link" href="#visita">Conhecer esta casa</a>
-        </div>
-      </article>
+        <article class="sala">
+            <div class="sala-quadro">
+            <img src="img/casa-2-palazzo.jpg" alt="Salão do Palazzo Ristorante com lustres e mesas montadas" loading="lazy">
+          <span class="sala-n">02</span>
+          <div class="sala-texto">
+            <p class="sala-tag">De 100 a 300 convidados</p>
+            <h3>Palazzo <br>Ristorante</h3>
+            <p class="sala-copy">
+              Elegância italiana com sofisticação contemporânea. O maior dos
+              três, para a festa em que a família inteira cabe.
+            </p>
+          </div>
+          </div>
+        </article>
+
+        <article class="sala">
+            <div class="sala-quadro">
+            <img src="img/casa-3-garden.jpg" alt="Jardim do The Garden Palace montado para cerimônia ao ar livre" loading="lazy">
+          <span class="sala-n">03</span>
+          <div class="sala-texto">
+            <p class="sala-tag">Cerimônia ao ar livre</p>
+            <h3>The Garden <br>Palace</h3>
+            <p class="sala-copy">
+              Charme ao ar livre em um jardim exclusivo. Para quem sempre
+              imaginou o sim debaixo de uma árvore.
+            </p>
+          </div>
+          </div>
+        </article>
+
+      </div>
     </section>
 
     <section class="faixa">
-      <img src="img/detalhe-mesa.jpg" alt="Detalhe de mesa posta com louça, cristais e velas" loading="lazy" width="1600" height="2133">
+      <img src="img/detalhe-mesa.jpg" alt="Detalhe de mesa posta com louça, cristais e velas" loading="lazy">
       <blockquote class="reveal">
         <p>A gente não monta o seu casamento no dia. <br><em>Monta nos seis meses antes.</em></p>
       </blockquote>
     </section>
 
     <section class="eventos" id="eventos">
-      <header class="secao-cabeca reveal">
+      <div class="secao-cabeca reveal">
         <p class="kicker">Eventos</p>
         <h2 class="titulo">Do intimista <em>ao grandioso</em></h2>
-      </header>
+      </div>
 
       <div class="lista-eventos">
         <article class="reveal">
@@ -183,7 +185,7 @@
       </div>
 
       <figure class="foto-larga reveal">
-        <img src="img/mini-wedding.jpg" alt="Mesa comunal montada para um mini wedding" loading="lazy" width="1600" height="1200">
+        <img src="img/mini-wedding.jpg" alt="Mesa comunal montada para um mini wedding" loading="lazy">
       </figure>
     </section>
 
@@ -233,8 +235,6 @@
 <script src="assets/scrub.js"></script>
 <script src="assets/motion.js"></script>
 <script>
-  // The WhatsApp button is part of the mockup. It must never look like it
-  // opened a conversation it did not open.
   (function () {
     var btn = document.querySelector('[data-zap]');
     var nota = document.querySelector('[data-zap-nota]');
@@ -242,8 +242,6 @@
     btn.addEventListener('click', function (e) { e.preventDefault(); nota.hidden = false; });
   }());
 
-  // The bar is transparent while it sits inside the footage, and only takes a
-  // background once the hero is gone.
   (function () {
     var bar = document.querySelector('[data-topbar]');
     var stage = document.querySelector('[data-scrub-stage]');

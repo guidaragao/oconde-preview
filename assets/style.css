@@ -1,21 +1,27 @@
 /* Grupo O Conde
  *
- * Two worlds on purpose. The hero is dark, because the footage is the light.
- * Everything below it is paper: warm ivory, ink type, air. The photographs
- * carry the page, so almost nothing is boxed, bordered or shaded.
+ * Type: Jost carries almost everything, geometric and quiet, so the photograph
+ * is always the loudest thing on screen. Newsreader italic appears only on the
+ * emphasised phrase. That is the 70/30 Ingrid asked for, and it deliberately
+ * avoids the high contrast romantic serif that reads as wedding invitation.
+ *
+ * The film never has type printed over it. The words sit in a solid band below
+ * the frame, which is why there is no scrim darkening the image any more.
  */
 
 :root {
-  --ink: #1A1613;
-  --paper: #F7F4ED;
-  --paper-2: #EFE9DD;
-  --ivory: #F7F1E6;
-  --gold: #A8823A;      /* deep enough to pass on paper */
-  --gold-lit: #C4A052;  /* the one that glows on the dark hero */
+  --ink: #14110E;
+  --ink-2: #1D1915;
+  --paper: #F5F2EB;
+  --paper-2: #EBE5D9;
+  --ivory: #F3EEE4;
+  --gold: #9C7C3C;      /* holds up on paper */
+  --gold-lit: #C9A961;  /* glows on the dark band */
 
-  --stage-travel: 1750vh; /* taller stage = slower, heavier scrub */
+  --stage-travel: 1750vh;
   --shell: min(1240px, 88vw);
-  --bleed: min(1600px, 94vw);
+  --bleed: min(1560px, 94vw);
+  --legenda-h: clamp(150px, 22vh, 210px);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,8 +31,9 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--ink);
   color: var(--ivory);
-  font-family: 'Montserrat', system-ui, sans-serif;
+  font-family: 'Jost', system-ui, sans-serif;
   font-size: 17px;
+  font-weight: 300;
   line-height: 1.7;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -37,31 +44,35 @@ img { display: block; max-width: 100%; height: auto; }
 .skip { position: absolute; left: -9999px; z-index: 99; padding: 1rem 1.4rem; background: var(--gold); color: var(--paper); }
 .skip:focus { left: 1rem; top: 1rem; }
 
-/* Nothing shows until the clip has reported its duration, so the first paint
- * is never a half scrubbed frame. */
 .page { opacity: 0; transition: opacity .8s ease; }
 body.is-ready .page { opacity: 1; }
 
-/* ---------- display type ---------- */
-
-.lead, .titulo, .beat h1, .beat h2, .casa h3, .kicker,
-.rodape-marca, .topbar-brand, blockquote p, .numero strong {
-  font-family: 'Instrument Serif', Georgia, serif;
-  font-weight: 400;
+/* The whole 30%: italic Newsreader, only ever on the emphasised phrase. */
+em {
+  font-family: 'Newsreader', Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
 }
-
-em { font-style: italic; }
 
 /* ---------- the stage ---------- */
 
-/* padding: 0 is load bearing. The blanket section padding further down would
- * otherwise push the sticky viewport off the top of the window and leave a
- * black band above the footage. */
+/* padding: 0 is load bearing. A blanket section padding would push the sticky
+ * viewport down and open a band above the film. */
 .stage { position: relative; height: var(--stage-travel); padding: 0; }
 
-.viewport { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+.viewport {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 1fr var(--legenda-h);
+  overflow: hidden;
+  background: var(--ink);
+}
 
-.viewport video {
+.filme { position: relative; overflow: hidden; }
+
+.filme video {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -73,160 +84,49 @@ em { font-style: italic; }
   transform: translateZ(0);
 }
 
-/* Legibility floor over any footage. The radial pass is the one that matters:
- * the beats sit dead centre, which is exactly where edge gradients leave the
- * image at full brightness and the type disappears. */
-.viewport::after {
+/* Only enough shading to keep the scroll hint readable at the very bottom of
+ * the frame. The image itself is left alone. */
+.filme::after {
   content: '';
   position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(70% 55% at 50% 50%, rgba(23, 18, 14, .70) 0%, rgba(23, 18, 14, .30) 55%, rgba(23, 18, 14, 0) 100%),
-    linear-gradient(to top, rgba(23, 18, 14, .84) 0%, rgba(23, 18, 14, 0) 52%),
-    linear-gradient(to bottom, rgba(23, 18, 14, .55) 0%, rgba(23, 18, 14, 0) 30%);
+  inset: auto 0 0 0;
+  height: 26%;
+  background: linear-gradient(to top, rgba(20, 17, 14, .5), transparent);
   pointer-events: none;
 }
 
-/* ---------- the beats ---------- */
+/* ---------- the caption band ---------- */
+
+.legenda {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem clamp(1.5rem, 6vw, 4rem);
+  background: var(--ink);
+  border-top: 1px solid rgba(201, 169, 97, .22);
+}
 
 .beat {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: grid;
-  place-content: center;
-  padding: 7vw;
+  grid-area: 1 / 1;
   text-align: center;
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity .9s ease, transform .9s cubic-bezier(.2, .8, .2, 1);
+  transform: translateY(16px);
+  transition: opacity .7s ease, transform .7s cubic-bezier(.2, .8, .2, 1);
   pointer-events: none;
 }
 
 .beat.is-live { opacity: 1; transform: none; pointer-events: auto; }
 
-.beat h1, .beat h2 {
-  font-size: clamp(2.9rem, 7vw, 6.2rem);
-  line-height: 1.04;
-  max-width: 22ch;
-  margin-inline: auto;
-  /* A tight dark halo plus a wide soft one. The tight pass is what keeps the
-   * thin serif strokes from dissolving into a bright frame. */
-  text-shadow: 0 1px 3px rgba(23, 18, 14, .9), 0 2px 14px rgba(23, 18, 14, .75), 0 4px 60px rgba(23, 18, 14, .6);
-}
-
-.beat em { color: var(--gold-lit); }
-
 .beat p {
-  margin-top: 1.5rem;
-  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
-  font-weight: 500;
-  max-width: 40ch;
+  font-size: clamp(1.5rem, 2.9vw, 2.6rem);
+  font-weight: 200;
+  line-height: 1.22;
+  letter-spacing: .004em;
+  max-width: 30ch;
   margin-inline: auto;
-  text-shadow: 0 1px 3px rgba(23, 18, 14, .9), 0 2px 20px rgba(23, 18, 14, .7);
 }
 
-/* ---------- buttons ---------- */
-
-.cta {
-  display: inline-block;
-  margin-top: 2.4rem;
-  padding: 1.15rem 2.8rem;
-  border: 1px solid var(--gold-lit);
-  border-radius: 999px;
-  background: none;
-  color: var(--ivory);
-  font-family: inherit;
-  font-size: .9rem;
-  font-weight: 600;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background .35s ease, color .35s ease, border-color .35s ease;
-}
-.cta:hover, .cta:focus-visible { background: var(--gold-lit); color: var(--ink); }
-
-.cta-solid { background: var(--gold); border-color: var(--gold); color: var(--paper); }
-.cta-solid:hover, .cta-solid:focus-visible { background: var(--ink); border-color: var(--ink); color: var(--paper); }
-
-.link {
-  display: inline-block;
-  margin-top: 1.6rem;
-  color: var(--gold);
-  font-size: .78rem;
-  font-weight: 600;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  text-decoration: none;
-  border-bottom: 1px solid currentColor;
-  padding-bottom: .3rem;
-}
-.link:hover { color: var(--ink); }
-
-/* ---------- top bar: part of the image, then a bar ---------- */
-
-.topbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 7;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-  width: 100%;
-  padding: 1.6rem clamp(1.2rem, 5vw, 3.4rem);
-  background: transparent;
-  border-bottom: 1px solid transparent;
-  transition: background .4s ease, padding .4s ease, border-color .4s ease;
-}
-
-.topbar.is-solid {
-  background: rgba(247, 244, 237, .94);
-  backdrop-filter: blur(12px);
-  border-bottom-color: rgba(26, 22, 19, .1);
-  padding-block: 1rem;
-}
-
-.topbar-brand {
-  color: var(--ivory);
-  font-size: 1.2rem;
-  letter-spacing: .28em;
-  text-transform: uppercase;
-  text-decoration: none;
-  white-space: nowrap;
-  text-shadow: 0 1px 14px rgba(23, 18, 14, .85);
-  transition: color .4s ease;
-}
-
-.topbar-nav { display: flex; align-items: center; gap: clamp(1rem, 2.2vw, 2.2rem); }
-
-.topbar-nav a {
-  color: var(--ivory);
-  font-size: .78rem;
-  font-weight: 600;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  text-decoration: none;
-  text-shadow: 0 1px 12px rgba(23, 18, 14, .85);
-  transition: color .4s ease, opacity .3s ease;
-}
-.topbar-nav a:hover { color: var(--gold-lit); }
-
-.topbar-cta { padding: .65rem 1.4rem; border: 1px solid currentColor; border-radius: 999px; }
-
-/* On paper the whole bar flips to ink, and the shadows that protected it over
- * the footage would only muddy it. */
-.topbar.is-solid .topbar-brand,
-.topbar.is-solid .topbar-nav a { color: var(--ink); text-shadow: none; }
-.topbar.is-solid .topbar-nav a:hover { color: var(--gold); }
-.topbar.is-solid .topbar-cta { color: var(--gold); }
-.topbar.is-solid .topbar-cta:hover { background: var(--gold); color: var(--paper); }
-
-@media (max-width: 800px) {
-  .topbar-nav a:not(.topbar-cta) { display: none; }
-}
+.beat em { color: var(--gold-lit); font-weight: 300; }
 
 /* ---------- hero chrome ---------- */
 
@@ -244,17 +144,17 @@ em { font-style: italic; }
 
 .hint {
   position: absolute;
-  bottom: 3.4rem;
+  bottom: 1.6rem;
   left: 50%;
   translate: -50% 0;
   z-index: 3;
-  font-size: .74rem;
-  font-weight: 600;
-  letter-spacing: .3em;
+  font-size: .7rem;
+  font-weight: 400;
+  letter-spacing: .34em;
   text-transform: uppercase;
   opacity: 0;
   transition: opacity .5s ease;
-  text-shadow: 0 1px 10px rgba(23, 18, 14, .9);
+  text-shadow: 0 1px 10px rgba(20, 17, 14, .9);
 }
 .hint.is-live { animation: breathe 2.8s ease-in-out infinite; }
 
@@ -263,31 +163,112 @@ em { font-style: italic; }
   50% { opacity: .85; transform: translateY(7px); }
 }
 
-/* ---------- paper ---------- */
+/* ---------- top bar ---------- */
 
-.after {
-  position: relative;
-  z-index: 4;
-  background: var(--paper);
-  color: var(--ink);
+.topbar {
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  width: 100%;
+  padding: 1.5rem clamp(1.2rem, 5vw, 3.4rem);
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background .4s ease, padding .4s ease, border-color .4s ease;
 }
 
-.after section { padding: clamp(6rem, 16vh, 12rem) 0; }
+.topbar.is-solid {
+  background: rgba(245, 242, 235, .95);
+  backdrop-filter: blur(12px);
+  border-bottom-color: rgba(20, 17, 14, .1);
+  padding-block: .95rem;
+}
+
+.topbar-brand {
+  color: var(--ivory);
+  font-size: 1.05rem;
+  font-weight: 300;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  text-shadow: 0 1px 14px rgba(20, 17, 14, .8);
+  transition: color .4s ease;
+}
+
+.topbar-nav { display: flex; align-items: center; gap: clamp(1rem, 2.2vw, 2.2rem); }
+
+.topbar-nav a {
+  color: var(--ivory);
+  font-size: .76rem;
+  font-weight: 400;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-shadow: 0 1px 12px rgba(20, 17, 14, .8);
+  transition: color .4s ease;
+}
+.topbar-nav a:hover { color: var(--gold-lit); }
+
+.topbar-cta { padding: .62rem 1.4rem; border: 1px solid currentColor; border-radius: 999px; }
+
+.topbar.is-solid .topbar-brand,
+.topbar.is-solid .topbar-nav a { color: var(--ink); text-shadow: none; }
+.topbar.is-solid .topbar-nav a:hover { color: var(--gold); }
+.topbar.is-solid .topbar-cta { color: var(--gold); }
+.topbar.is-solid .topbar-cta:hover { background: var(--gold); color: var(--paper); }
+
+@media (max-width: 800px) { .topbar-nav a:not(.topbar-cta) { display: none; } }
+
+/* ---------- buttons ---------- */
+
+.cta {
+  display: inline-block;
+  margin-top: 2.4rem;
+  padding: 1.1rem 2.8rem;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  background: none;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: .82rem;
+  font-weight: 400;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background .35s ease, color .35s ease, border-color .35s ease;
+}
+.cta-solid { background: var(--gold); border-color: var(--gold); color: var(--paper); }
+.cta-solid:hover, .cta-solid:focus-visible { background: var(--ink); border-color: var(--ink); }
+
+/* ---------- paper ---------- */
+
+.after { position: relative; z-index: 4; background: var(--paper); color: var(--ink); }
+
+.after > section { padding: clamp(6rem, 16vh, 12rem) 0; }
 
 .abertura, .visita { width: var(--shell); margin-inline: auto; text-align: center; }
-.casas, .eventos { width: var(--bleed); margin-inline: auto; }
+.eventos { width: var(--bleed); margin-inline: auto; }
 
 .kicker {
-  font-style: italic;
-  font-size: clamp(1.15rem, 1.9vw, 1.6rem);
+  font-size: .74rem;
+  font-weight: 400;
+  letter-spacing: .28em;
+  text-transform: uppercase;
   color: var(--gold);
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.4rem;
 }
 
 .lead, .titulo {
-  font-size: clamp(2.3rem, 5vw, 4.4rem);
-  line-height: 1.1;
-  max-width: 20ch;
+  font-size: clamp(2.2rem, 4.6vw, 4rem);
+  font-weight: 200;
+  line-height: 1.14;
+  letter-spacing: -.01em;
+  max-width: 22ch;
 }
 .abertura .lead, .visita .lead { margin-inline: auto; }
 .lead em, .titulo em { color: var(--gold); }
@@ -295,14 +276,13 @@ em { font-style: italic; }
 .lede {
   margin: 2rem auto 0;
   max-width: 54ch;
-  font-size: 1.06rem;
-  opacity: .72;
+  font-size: 1.05rem;
+  opacity: .68;
 }
 
 .secao-cabeca { margin-bottom: clamp(3rem, 8vh, 6rem); }
-.secao-cabeca .kicker { text-align: left; }
 
-/* ---------- numbers, as type not as boxes ---------- */
+/* ---------- numbers ---------- */
 
 .numeros {
   display: grid;
@@ -316,50 +296,110 @@ em { font-style: italic; }
 
 .numero strong {
   display: block;
-  font-size: clamp(2.8rem, 5.5vw, 4.6rem);
+  font-size: clamp(2.8rem, 5.5vw, 4.4rem);
+  font-weight: 200;
   line-height: 1;
+  letter-spacing: -.02em;
   color: var(--gold);
-  font-weight: 400;
 }
 
 .numero span {
   display: block;
   margin-top: .8rem;
-  font-size: .78rem;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  opacity: .6;
-}
-
-/* ---------- the three houses ---------- */
-
-.casa {
-  display: grid;
-  grid-template-columns: 1.35fr 1fr;
-  align-items: center;
-  gap: clamp(2rem, 6vw, 6rem);
-  margin-bottom: clamp(5rem, 14vh, 11rem);
-}
-.casa:last-child { margin-bottom: 0; }
-.casa.is-flipped .casa-foto { order: 2; }
-
-.casa-foto img { width: 100%; aspect-ratio: 5 / 4; object-fit: cover; }
-
-.casa-tag {
   font-size: .74rem;
-  font-weight: 600;
   letter-spacing: .2em;
   text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 1rem;
+  opacity: .55;
 }
 
-.casa h3 { font-size: clamp(2rem, 3.2vw, 3.1rem); line-height: 1.08; margin-bottom: 1.2rem; }
-.casa-texto > p { opacity: .74; max-width: 40ch; }
+/* ---------- the three rooms: you walk through them ---------- */
 
-@media (max-width: 900px) {
-  .casa { grid-template-columns: 1fr; gap: 1.8rem; }
-  .casa.is-flipped .casa-foto { order: 0; }
+.casas { padding: 0 !important; background: var(--ink); }
+
+.casas-intro {
+  width: var(--shell);
+  margin-inline: auto;
+  padding: clamp(6rem, 15vh, 11rem) 0;
+  color: var(--ivory);
+  text-align: center;
+}
+.casas-intro .titulo { margin-inline: auto; }
+.casas-intro .titulo em { color: var(--gold-lit); }
+
+/* Each room is a full screen panel that sticks while the next one rises over
+ * it. Stacking them this way is what makes it feel like moving from room to
+ * room rather than scrolling a list. */
+.salas { position: relative; }
+
+/* The room is taller than the screen; the frame inside it is what sticks.
+ * That extra height is dwell time: the room holds still long enough to be
+ * read before the next one rises over it. Equal height siblings would cover
+ * each other immediately and cut the copy in half. */
+.sala { position: relative; height: 185vh; }
+
+.sala-quadro {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: grid;
+  place-items: end start;
+  isolation: isolate;
+}
+
+.sala-quadro img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+.sala-quadro::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(to top, rgba(20, 17, 14, .94) 0%, rgba(20, 17, 14, .55) 34%, rgba(20, 17, 14, .12) 68%, rgba(20, 17, 14, .05) 100%),
+    linear-gradient(to right, rgba(20, 17, 14, .7) 0%, rgba(20, 17, 14, .15) 52%, transparent 70%);
+}
+
+.sala-texto {
+  padding: clamp(2.5rem, 8vh, 6rem) clamp(1.5rem, 6vw, 5rem);
+  max-width: 46ch;
+  color: var(--ivory);
+}
+
+.sala-tag {
+  font-size: .72rem;
+  font-weight: 400;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--gold-lit);
+  margin-bottom: 1.1rem;
+}
+
+.sala-texto h3 {
+  font-size: clamp(2.4rem, 5.2vw, 4.6rem);
+  font-weight: 200;
+  line-height: 1.02;
+  letter-spacing: -.02em;
+  margin-bottom: 1.3rem;
+}
+
+.sala-copy { font-size: 1.02rem; opacity: .8; max-width: 40ch; }
+
+.sala-n {
+  position: absolute;
+  top: clamp(5rem, 12vh, 8rem);
+  right: clamp(1.5rem, 6vw, 5rem);
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 200;
+  color: var(--ivory);
+  opacity: .22;
+  letter-spacing: -.02em;
 }
 
 /* ---------- full bleed quote ---------- */
@@ -367,22 +407,23 @@ em { font-style: italic; }
 .faixa {
   position: relative;
   padding: 0 !important;
-  min-height: 82vh;
+  min-height: 86vh;
   display: grid;
   place-items: center;
   overflow: hidden;
 }
 
 .faixa img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.faixa::after { content: ''; position: absolute; inset: 0; background: rgba(23, 18, 14, .55); }
+.faixa::after { content: ''; position: absolute; inset: 0; background: rgba(20, 17, 14, .58); }
 
 .faixa blockquote { position: relative; z-index: 2; width: var(--shell); text-align: center; }
 
 .faixa blockquote p {
-  font-size: clamp(1.9rem, 4.2vw, 3.6rem);
-  line-height: 1.16;
+  font-size: clamp(1.8rem, 3.8vw, 3.2rem);
+  font-weight: 200;
+  line-height: 1.2;
+  letter-spacing: -.01em;
   color: var(--ivory);
-  text-shadow: 0 2px 24px rgba(23, 18, 14, .75);
 }
 .faixa em { color: var(--gold-lit); }
 
@@ -394,36 +435,27 @@ em { font-style: italic; }
   gap: clamp(2rem, 4vw, 3.5rem);
 }
 
-.lista-eventos article { border-top: 1px solid rgba(26, 22, 19, .18); padding-top: 1.5rem; }
+.lista-eventos article { border-top: 1px solid rgba(20, 17, 14, .16); padding-top: 1.5rem; }
 
 .lista-eventos h4 {
-  font-size: .92rem;
-  font-weight: 600;
-  letter-spacing: .16em;
+  font-size: .8rem;
+  font-weight: 500;
+  letter-spacing: .2em;
   text-transform: uppercase;
   color: var(--gold);
-  margin-bottom: .8rem;
+  margin-bottom: .9rem;
 }
 
-.lista-eventos p { font-size: .97rem; opacity: .74; }
+.lista-eventos p { font-size: .97rem; opacity: .7; }
 
 .foto-larga { margin-top: clamp(3rem, 9vh, 6.5rem); }
 .foto-larga img { width: 100%; aspect-ratio: 21 / 9; object-fit: cover; }
 
-/* ---------- visit ---------- */
-
-.visita-nota {
-  margin-top: 1.4rem;
-  font-size: .86rem;
-  color: var(--gold);
-}
+.visita-nota { margin-top: 1.4rem; font-size: .86rem; color: var(--gold); }
 
 /* ---------- footer ---------- */
 
-.rodape {
-  background: var(--paper-2);
-  padding: clamp(4rem, 10vh, 7rem) 0 3rem;
-}
+.rodape { background: var(--paper-2); padding: clamp(4rem, 10vh, 7rem) 0 3rem; }
 
 .rodape-grid {
   display: grid;
@@ -433,20 +465,20 @@ em { font-style: italic; }
   margin-inline: auto;
 }
 
-.rodape p { font-size: .9rem; opacity: .62; }
+.rodape p { font-size: .9rem; opacity: .6; }
 
 .rodape-marca {
-  font-size: 1.35rem !important;
-  letter-spacing: .2em;
+  font-size: 1.2rem !important;
+  letter-spacing: .3em;
   text-transform: uppercase;
   opacity: 1 !important;
   margin-bottom: .7rem;
 }
 
 .rodape-titulo {
-  font-size: .72rem !important;
-  font-weight: 600;
-  letter-spacing: .18em;
+  font-size: .7rem !important;
+  font-weight: 400;
+  letter-spacing: .22em;
   text-transform: uppercase;
   color: var(--gold);
   opacity: 1 !important;
@@ -457,7 +489,7 @@ em { font-style: italic; }
   width: var(--shell);
   margin: 3.5rem auto 0;
   padding-top: 2rem;
-  border-top: 1px solid rgba(26, 22, 19, .12);
+  border-top: 1px solid rgba(20, 17, 14, .12);
   font-size: .78rem !important;
   opacity: .45 !important;
 }
@@ -470,53 +502,23 @@ em { font-style: italic; }
   bottom: 1.1rem;
   z-index: 8;
   padding: .4rem .8rem;
-  background: rgba(26, 22, 19, .8);
+  background: rgba(20, 17, 14, .8);
   border-radius: 999px;
   color: var(--gold-lit);
-  font-size: .66rem;
-  font-weight: 600;
-  letter-spacing: .14em;
+  font-size: .64rem;
+  font-weight: 400;
+  letter-spacing: .18em;
   text-transform: uppercase;
   pointer-events: none;
 }
 
-/* ---------- phone ---------- */
-
-@media (max-width: 620px) {
-  body { font-size: 16px; }
-
-  .topbar { padding: 1.1rem 1.2rem; }
-  .topbar-brand { font-size: .95rem; letter-spacing: .2em; }
-
-  /* The manual line breaks are tuned for a wide screen. On a phone they strand
-   * single words on their own line, so let the text wrap where it wants. The
-   * space before each <br> in the markup is what survives this. */
-  .beat h1 br, .beat h2 br, .lead br, blockquote p br { display: none; }
-
-  .beat h1, .beat h2 { font-size: clamp(2.3rem, 9vw, 3.2rem); max-width: 16ch; }
-  .selo { right: .6rem; bottom: .7rem; font-size: .6rem; padding: .3rem .6rem; }
-}
-
 /* ---------- motion tied to scroll position ---------- */
-
-/* The hero is a scrub, so the page below it must move the same way: linked to
- * scroll position, not fired once on entry. animation-timeline: view() gives
- * exactly that natively. Everything lives inside @supports so a browser
- * without it simply gets the finished, visible state.
- */
 
 @keyframes sobe {
   from { opacity: 0; transform: translateY(64px); }
   to   { opacity: 1; transform: none; }
 }
 
-@keyframes cortina {
-  from { clip-path: inset(0 0 100% 0); }
-  to   { clip-path: inset(0 0 0 0); }
-}
-
-/* The photo drifts against its frame while the frame scrolls. Slow, and only
- * a few percent: at editorial scale a large parallax reads as a glitch. */
 @keyframes deriva {
   from { transform: scale(1.18) translateY(-6.5%); }
   to   { transform: scale(1.18) translateY(6.5%); }
@@ -535,34 +537,16 @@ em { font-style: italic; }
       animation-timeline: view();
       animation-range: entry 0% cover 38%;
     }
-
-    /* Each item in a row starts a touch later than the one before it, so the
-     * row assembles instead of landing as a slab. */
     .reveal-2 { animation-range: entry 0% cover 44%; }
     .reveal-3 { animation-range: entry 0% cover 50%; }
     .reveal-4 { animation-range: entry 0% cover 56%; }
 
-    .casa-foto {
-      animation: cortina linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 45%;
-    }
-
-    /* The photo frames carry overflow: hidden, which makes each of them a
-     * scrollport. An anonymous view() on the image inside would therefore
-     * measure the image against its own frame, where it never moves, and the
-     * animation would sit frozen at 50%. Naming the timeline on the frame and
-     * referencing it from the image measures the frame against the page,
-     * which is what we actually want. */
-    .casa-foto  { view-timeline: --frame-casa block; }
+    /* The frames carry overflow: hidden, which makes each of them a scrollport.
+     * An anonymous view() on the image inside would measure the image against
+     * its own frame, where it never moves, and freeze at 50%. Naming the
+     * timeline on the frame is what makes the drift real. */
     .foto-larga { view-timeline: --frame-larga block; }
     .faixa      { view-timeline: --frame-faixa block; }
-
-    .casa-foto img {
-      animation: deriva linear both;
-      animation-timeline: --frame-casa;
-      animation-range: cover 0% cover 100%;
-    }
 
     .foto-larga img {
       animation: deriva linear both;
@@ -570,7 +554,6 @@ em { font-style: italic; }
       animation-range: cover 0% cover 100%;
     }
 
-    /* The quote image lets go of its zoom as it crosses the window. */
     .faixa img {
       animation: recolhe linear both;
       animation-timeline: --frame-faixa;
@@ -579,31 +562,47 @@ em { font-style: italic; }
   }
 }
 
-/* Fallback path: motion.js adds .is-in when the element enters. */
-.no-scroll-timeline .reveal,
-.no-scroll-timeline .reveal-foto { opacity: 0; transform: translateY(38px); transition: opacity .9s ease, transform .9s cubic-bezier(.2, .8, .2, 1); }
-.no-scroll-timeline .reveal.is-in,
-.no-scroll-timeline .reveal-foto.is-in { opacity: 1; transform: none; }
+.no-scroll-timeline .reveal { opacity: 0; transform: translateY(64px); transition: opacity .9s ease, transform .9s cubic-bezier(.2, .8, .2, 1); }
+.no-scroll-timeline .reveal.is-in { opacity: 1; transform: none; }
 
-/* The photos are cropped containers, so the drifting image needs room. */
-.casa-foto, .foto-larga, .faixa { overflow: hidden; }
+.foto-larga, .faixa { overflow: hidden; }
+
+/* ---------- phone ---------- */
+
+@media (max-width: 620px) {
+  body { font-size: 16px; }
+
+  :root { --legenda-h: clamp(140px, 26vh, 190px); }
+
+  .topbar { padding: 1.1rem 1.2rem; }
+  .topbar-brand { font-size: .85rem; letter-spacing: .22em; }
+
+  /* The manual breaks are tuned for a wide screen. On a phone they strand
+   * single words, so let the text wrap where it wants. The space before each
+   * <br> in the markup is what survives this. */
+  .lead br, blockquote p br, .sala-texto h3 br { display: none; }
+
+  .beat p { font-size: clamp(1.15rem, 5.4vw, 1.6rem); max-width: 24ch; }
+  .sala-n { top: 4.5rem; font-size: 2.6rem; }
+  .selo { right: .6rem; bottom: .7rem; font-size: .58rem; padding: .3rem .6rem; }
+}
 
 /* ---------- fallbacks ---------- */
 
 body.is-static .stage { height: auto; }
 body.is-static .hint,
 body.is-static .rail { display: none; }
-body.is-static .beat { position: relative; inset: auto; min-height: 62vh; }
-body.is-static .viewport { position: relative; height: auto; min-height: 100vh; }
+body.is-static .viewport { position: relative; height: auto; grid-template-rows: 70vh auto; }
+body.is-static .beat { position: relative; opacity: 1; transform: none; }
 
-body.has-no-video .viewport { background: radial-gradient(90% 70% at 50% 20%, #2E241A 0%, transparent 62%), var(--ink); }
+body.has-no-video .filme { background: radial-gradient(90% 70% at 50% 20%, #2E241A 0%, transparent 62%), var(--ink); }
 
-body.has-no-video .viewport::before {
+body.has-no-video .filme::before {
   content: 'Sem clipe em video/. Coloque scrub.mp4 ali.';
   position: absolute;
   inset: auto 0 2rem 0;
   font-size: .8rem;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: .14em;
   text-transform: uppercase;
   text-align: center;
