@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Grupo O Conde</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="page">
+
+  <!-- The stage is deliberately taller than the screen. That extra height IS
+       the timeline: the video sits sticky inside it while the page scrolls
+       past, and every pixel of scroll advances the clip. -->
+  <section class="stage" data-scrub-stage>
+
+    <div class="viewport">
+
+      <video
+        data-scrub-video
+        src="video/scrub.mp4"
+        poster="video/poster.jpg"
+        muted
+        playsinline
+        preload="auto"
+        disablepictureinpicture
+      ></video>
+
+      <div class="brand">Grupo O Conde</div>
+
+      <div class="hint" data-beat-start="0" data-beat-end="0.05">Role</div>
+
+      <!-- Each beat owns a slice of the scroll, expressed as 0 to 1 of the
+           whole stage. The gaps between ranges are breaths where only the
+           image carries the moment. -->
+
+      <div class="beat" data-beat-start="0.00" data-beat-end="0.16">
+        <h1>Existe um dia que você já<br><em>imaginou mil vezes</em></h1>
+      </div>
+
+      <div class="beat" data-beat-start="0.22" data-beat-end="0.40">
+        <h2>E existe o lugar onde ele<br><em>finalmente acontece</em></h2>
+      </div>
+
+      <div class="beat" data-beat-start="0.46" data-beat-end="0.63">
+        <h2>O bolo, as flores, a luz</h2>
+        <p>Tudo no lugar muito antes de você chegar.</p>
+      </div>
+
+      <div class="beat" data-beat-start="0.70" data-beat-end="1.00">
+        <h2>Mais de <em>4.000 noivas</em><br>já disseram sim aqui</h2>
+        <p>Belo Horizonte, há mais de uma década.</p>
+        <a class="cta" href="#casas">Agendar uma visita</a>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="rail" data-scrub-rail></div>
+
+  <!-- Normal page resumes here. The scrub is the opening act, not the site. -->
+  <section class="after" id="casas">
+    <p class="kicker">Três casas, três casamentos possíveis</p>
+    <div class="houses">
+      <article><h3>O Conde<br>Restaurante</h3><p>Gastronomia internacional na Cidade Jardim.</p></article>
+      <article><h3>Palazzo<br>Ristorante</h3><p>Elegância italiana para até 300 convidados.</p></article>
+      <article><h3>The Garden<br>Palace</h3><p>Jardim aberto para cerimônia ao ar livre.</p></article>
+    </div>
+  </section>
+
+</div>
+
+<script src="assets/scrub.js"></script>
+</body>
+</html>
