@@ -254,6 +254,26 @@
     var btn = document.querySelector('[data-musica]');
     var ico = document.querySelector('[data-musica-icone]');
     if (!audio || !btn) return;
+    function toca() {
+      audio.volume = 0.55;
+      audio.play();
+      ico.textContent = '\u275A\u275A';
+      btn.setAttribute('aria-label', 'Pausar m\u00fasica');
+      btn.classList.add('is-tocando');
+    }
+
+    // The very first gesture anywhere on the page starts the music, so nobody
+    // has to find the button. Gestures on the button itself are left to the
+    // toggle below, otherwise its first click would play and pause at once.
+    function primeira(e) {
+      removeEventListener('pointerdown', primeira, true);
+      removeEventListener('keydown', primeira, true);
+      if (btn.contains(e.target)) return;
+      if (audio.paused) toca();
+    }
+    addEventListener('pointerdown', primeira, true);
+    addEventListener('keydown', primeira, true);
+
     btn.addEventListener('click', function () {
       if (audio.paused) {
         audio.volume = 0.55;
