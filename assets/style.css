@@ -18,7 +18,7 @@
   --gold: #9C7C3C;      /* holds up on paper */
   --gold-lit: #C9A961;  /* glows on the dark band */
 
-  --stage-travel: 1750vh;
+  --stage-travel: 2025vh;
   --shell: min(1240px, 88vw);
   --bleed: min(1560px, 94vw);
   --legenda-h: clamp(150px, 22vh, 210px);
@@ -492,6 +492,33 @@ em {
   border-top: 1px solid rgba(20, 17, 14, .12);
   font-size: .78rem !important;
   opacity: .45 !important;
+}
+
+/* ---------- music ---------- */
+
+.musica {
+  position: fixed;
+  left: 1rem;
+  bottom: 1.1rem;
+  z-index: 8;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 169, 97, .55);
+  background: rgba(20, 17, 14, .8);
+  color: var(--gold-lit);
+  font-size: 1.1rem;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background .3s ease, transform .3s ease;
+}
+.musica:hover { background: rgba(20, 17, 14, .95); transform: scale(1.06); }
+.musica.is-tocando .musica-icone { font-size: .7rem; letter-spacing: .08em; }
+
+@media (max-width: 620px) {
+  .musica { left: .6rem; bottom: .7rem; width: 40px; height: 40px; }
 }
 
 /* ---------- honesty mark ---------- */

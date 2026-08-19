@@ -41,7 +41,7 @@
       <div class="filme">
         <video
           data-scrub-video
-          src="video/scrub.mp4?v=34m"
+          src="video/scrub.mp4?v=cas35"
           poster="video/poster.jpg"
           muted
           playsinline
@@ -230,6 +230,11 @@
 
 </div>
 
+<audio data-musica-audio src="audio/musica.mp3" loop preload="none"></audio>
+<button class="musica" data-musica aria-label="Tocar música" title="Música">
+  <span class="musica-icone" data-musica-icone>♪</span>
+</button>
+
 <span class="selo">▲ Simulação</span>
 
 <script src="assets/scrub.js"></script>
@@ -240,6 +245,29 @@
     var nota = document.querySelector('[data-zap-nota]');
     if (!btn || !nota) return;
     btn.addEventListener('click', function (e) { e.preventDefault(); nota.hidden = false; });
+  }());
+
+  // Background music starts silent: browsers only allow sound after a real
+  // click, so the button is the honest way in. One control, play and pause.
+  (function () {
+    var audio = document.querySelector('[data-musica-audio]');
+    var btn = document.querySelector('[data-musica]');
+    var ico = document.querySelector('[data-musica-icone]');
+    if (!audio || !btn) return;
+    btn.addEventListener('click', function () {
+      if (audio.paused) {
+        audio.volume = 0.55;
+        audio.play();
+        ico.textContent = '❚❚';
+        btn.setAttribute('aria-label', 'Pausar música');
+        btn.classList.add('is-tocando');
+      } else {
+        audio.pause();
+        ico.textContent = '♪';
+        btn.setAttribute('aria-label', 'Tocar música');
+        btn.classList.remove('is-tocando');
+      }
+    });
   }());
 
   (function () {
