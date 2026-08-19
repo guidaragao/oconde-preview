@@ -15,6 +15,15 @@
 
 <a class="skip" href="#casas">Pular para o conteúdo</a>
 
+<!-- The entry door. Its click is the gesture that unlocks the music, so the
+     soundtrack is guaranteed for everyone. If the browser already allows
+     autoplay, the door dissolves by itself. -->
+<div class="portal" data-portal>
+  <p class="portal-marca">Grupo O Conde</p>
+  <p class="portal-frase">Existe um dia que você já <em>imaginou mil vezes</em></p>
+  <button class="cta portal-entrar" data-portal-entrar>Entrar</button>
+</div>
+
 <header class="topbar" data-topbar>
   <a class="topbar-brand" href="#topo">Grupo O Conde</a>
   <nav class="topbar-nav">
@@ -283,6 +292,23 @@
       removeEventListener('scroll', tenta);
       removeEventListener('wheel', tenta);
     });
+
+    var portal = document.querySelector('[data-portal]');
+    var entrar = document.querySelector('[data-portal-entrar]');
+
+    function fechaPortal() {
+      if (!portal) return;
+      portal.classList.add('is-fechado');
+      setTimeout(function () { portal.remove(); portal = null; }, 900);
+    }
+
+    if (entrar) entrar.addEventListener('click', function () {
+      tenta();
+      fechaPortal();
+    });
+
+    // if autoplay is allowed the door opens by itself
+    audio.addEventListener('playing', fechaPortal);
 
     // straight away, for browsers that allow it
     tenta();

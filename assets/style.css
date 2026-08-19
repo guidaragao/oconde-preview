@@ -494,6 +494,49 @@ em {
   opacity: .45 !important;
 }
 
+/* ---------- the entry door ---------- */
+
+.portal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-content: center;
+  gap: 1.2rem;
+  text-align: center;
+  background: var(--ink);
+  opacity: 1;
+  transition: opacity .9s ease;
+}
+
+.portal.is-fechado { opacity: 0; pointer-events: none; }
+
+.portal-marca {
+  font-size: .9rem;
+  font-weight: 300;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--gold-lit);
+}
+
+.portal-frase {
+  font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+  font-weight: 200;
+  line-height: 1.25;
+  max-width: 24ch;
+  margin-inline: auto;
+  color: var(--ivory);
+}
+.portal-frase em { color: var(--gold-lit); }
+
+.portal-entrar {
+  margin-top: 1.6rem;
+  justify-self: center;
+  color: var(--ivory);
+  border-color: var(--gold-lit);
+}
+.portal-entrar:hover { background: var(--gold-lit); color: var(--ink); }
+
 /* ---------- music ---------- */
 
 .musica {
