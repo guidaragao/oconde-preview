@@ -247,45 +247,68 @@
     btn.addEventListener('click', function (e) { e.preventDefault(); nota.hidden = false; });
   }());
 
-  // Background music starts silent: browsers only allow sound after a real
-  // click, so the button is the honest way in. One control, play and pause.
+  // The music wants to be playing. The page tries every opening the
+  // browser allows: on load, again on the first scroll, and on the first
+  // touch or click. Desktop first visits stay silent until a real gesture -
+  // that is browser autoplay policy, not a choice. Once the visitor pauses
+  // via the button, the page stops insisting.
   (function () {
     var audio = document.querySelector('[data-musica-audio]');
     var btn = document.querySelector('[data-musica]');
     var ico = document.querySelector('[data-musica-icone]');
     if (!audio || !btn) return;
-    function toca() {
-      audio.volume = 0.55;
-      audio.play();
+
+    var pausouDeProposito = false;
+
+    function uiTocando() {
       ico.textContent = '\u275A\u275A';
       btn.setAttribute('aria-label', 'Pausar m\u00fasica');
       btn.classList.add('is-tocando');
     }
-
-    // The very first gesture anywhere on the page starts the music, so nobody
-    // has to find the button. Gestures on the button itself are left to the
-    // toggle below, otherwise its first click would play and pause at once.
-    function primeira(e) {
-      removeEventListener('pointerdown', primeira, true);
-      removeEventListener('keydown', primeira, true);
-      if (btn.contains(e.target)) return;
-      if (audio.paused) toca();
+    function uiParada() {
+      ico.textContent = '\u266A';
+      btn.setAttribute('aria-label', 'Tocar m\u00fasica');
+      btn.classList.remove('is-tocando');
     }
-    addEventListener('pointerdown', primeira, true);
-    addEventListener('keydown', primeira, true);
+
+    function tenta() {
+      if (pausouDeProposito || !audio.paused) return;
+      audio.volume = 0.55;
+      var pr = audio.play();
+      if (pr && pr.catch) pr.catch(function () {});
+    }
+
+    audio.addEventListener('playing', function () {
+      uiTocando();
+      removeEventListener('scroll', tenta);
+      removeEventListener('wheel', tenta);
+    });
+
+    // straight away, for browsers that allow it
+    tenta();
+    // on the first movements of the scroll
+    addEventListener('scroll', tenta, { passive: true });
+    addEventListener('wheel', tenta, { passive: true });
+    // and on the first real gesture anywhere (mobile scroll touch included)
+    function gesto(e) {
+      removeEventListener('pointerdown', gesto, true);
+      removeEventListener('keydown', gesto, true);
+      if (btn.contains(e.target)) return;
+      tenta();
+    }
+    addEventListener('pointerdown', gesto, true);
+    addEventListener('keydown', gesto, true);
 
     btn.addEventListener('click', function () {
       if (audio.paused) {
+        pausouDeProposito = false;
         audio.volume = 0.55;
         audio.play();
-        ico.textContent = '❚❚';
-        btn.setAttribute('aria-label', 'Pausar música');
-        btn.classList.add('is-tocando');
+        uiTocando();
       } else {
+        pausouDeProposito = true;
         audio.pause();
-        ico.textContent = '♪';
-        btn.setAttribute('aria-label', 'Tocar música');
-        btn.classList.remove('is-tocando');
+        uiParada();
       }
     });
   }());
